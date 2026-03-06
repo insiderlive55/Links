@@ -1,430 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Cricinsider365</title>
-  <link rel="shortcut icon" href="" />
-  <!-- Tailwind + icons -->
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: #0a0f1c;
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      color: #edf2f7;
-      line-height: 1.5;
-    }
 
-    /* spacious card with smooth transitions */
-    .match-tile {
-      background: #131d2f;
-      border-radius: 32px;
-      border: 1px solid #253247;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 15px 30px -10px rgba(0,0,0,0.8);
-      transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1), border-color 0.2s, box-shadow 0.3s, background 0.2s;
-      will-change: transform;
-    }
-    .match-tile:hover {
-      background: #17253b;
-      border-color: #3b82f6;
-      transform: scale(1.02) translateY(-4px);
-      box-shadow: 0 25px 40px -8px #1e3a8a40;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>@Cricinsider365</title>
 
-    /* image zoom on hover */
-    .img-wrapper {
-      overflow: hidden;
-      background: #0f1a2c;
-      height: 210px;
-      position: relative;
-    }
-    .match-img-spacious {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.4s ease;
-    }
-    .match-tile:hover .match-img-spacious {
-      transform: scale(1.05);
-    }
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    .live-badge-flat {
-      background: #b91c1c;
-      color: white;
-      font-weight: 600;
-      font-size: 0.8rem;
-      padding: 0.35rem 1rem;
-      border-radius: 40px;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      box-shadow: 0 4px 12px rgba(185, 28, 28, 0.4);
-      animation: pulse-live 1.8s infinite;
-    }
-    @keyframes pulse-live {
-      0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.6); }
-      70% { box-shadow: 0 0 0 8px rgba(220, 38, 38, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
-    }
+<style>
 
-    .btn-watch-live {
-      background: #2563eb;
-      border-radius: 50px;
-      padding: 0.9rem 1rem;
-      font-weight: 700;
-      font-size: 1rem;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
-      transition: all 0.2s;
-      width: 100%;
-      border: none;
-      margin-top: 0.5rem;
-      position: relative;
-      overflow: hidden;
-    }
-    .btn-watch-live:hover { background: #1d4ed8; transform: scale(1.01); }
-    .btn-watch-live:active { transform: scale(0.98); }
-    .btn-watch-live i { transition: transform 0.2s; }
-    .btn-watch-live:hover i { transform: translateX(4px); }
+body{
+  background:#0a0f1c;
+  font-family:system-ui;
+  color:white;
+  padding-bottom:50px;
+}
 
-    .btn-upcoming {
-      background: transparent;
-      border-radius: 50px;
-      padding: 0.9rem 1rem;
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: #94a3b8;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
-      width: 100%;
-      border: 1px solid #334155;
-      margin-top: 0.5rem;
-      pointer-events: none;
-      opacity: 0.8;
-    }
+.match-tile{
+  background:#131d2f;
+  border-radius:28px;
+  border:1px solid #253247;
+  overflow:hidden;
+  transition:.3s;
+  display:flex;
+  flex-direction:column;
+}
 
-    /* skeleton shimmer animation */
-    .skeleton-spacious {
-      background: linear-gradient(90deg, #1b2538 25%, #263449 50%, #1b2538 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite linear;
-      border-radius: 32px;
-      min-height: 430px;
-    }
-    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.match-tile:hover{
+  transform:translateY(-6px);
+  border-color:#3b82f6;
+  box-shadow:0 10px 25px -5px rgba(59,130,246,.2);
+}
 
-    .divider-simple { height: 1px; background: #1f2a3c; width: 100%; }
+.img-wrapper{
+  height:200px;
+  overflow:hidden;
+  position:relative;
+  background:#1e293b;
+}
 
-    /* popup overlay â€“ hidden by default + entrance animation */
-    #popup-24h {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(3, 7, 18, 0.8);
-      backdrop-filter: blur(4px);
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      animation: fadeIn 0.3s ease;
-    }
-    .popup-card {
-      background: #152436;
-      border-radius: 48px;
-      max-width: 360px;
-      width: 90%;
-      padding: 2rem 1.8rem;
-      border: 1px solid #2e405b;
-      box-shadow: 0 30px 50px -10px black;
-      text-align: center;
-      transform: scale(0.95);
-      animation: popupEntrance 0.3s 0.1s forwards;
-      opacity: 0;
-    }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes popupEntrance {
-      0% { opacity: 0; transform: scale(0.9) translateY(10px); }
-      100% { opacity: 1; transform: scale(1) translateY(0); }
-    }
+.match-img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
 
-    /* header subtle float */
-    .header-pill {
-      transition: transform 0.3s, box-shadow 0.3s;
-      animation: softFloat 4s infinite alternate ease-in-out;
-    }
-    @keyframes softFloat {
-      0% { transform: translateY(0); box-shadow: 0 4px 10px rgba(0,40,100,0.3); }
-      100% { transform: translateY(-3px); box-shadow: 0 12px 24px -8px #1e3a8a; }
-    }
+.live-badge{
+  position:absolute;
+  top:12px;
+  left:12px;
+  background:#dc2626;
+  font-size:11px;
+  font-weight:800;
+  padding:4px 12px;
+  border-radius:30px;
+}
 
-    /* loading dots for empty state (optional) */
-    .pulse-dot {
-      width: 8px; height: 8px; background: #3b82f6; border-radius: 50%;
-      display: inline-block; margin: 0 2px;
-      animation: pulse-dot 1.2s infinite;
-    }
-    @keyframes pulse-dot { 0%,100%{ opacity: 0.3; transform: scale(1); } 50%{ opacity: 1; transform: scale(1.3); } }
+.btn-watch{
+  background:#2563eb;
+  padding:14px;
+  border-radius:16px;
+  text-align:center;
+  font-weight:800;
+  margin-top:auto;
+  cursor:pointer;
+}
 
-    /* line clamp */
-    .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  </style>
+.btn-watch.not-live{
+  background:#1e293b;
+  color:#64748b;
+  cursor:not-allowed;
+}
+
+.modal-overlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.9);
+  z-index:1000;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal-content{
+  background:#131d2f;
+  width:90%;
+  max-width:350px;
+  padding:30px;
+  border-radius:30px;
+  border:1px solid #253247;
+  text-align:center;
+}
+
+.quality-btn{
+  background:#1e293b;
+  border:1px solid #253247;
+  width:100%;
+  padding:15px;
+  margin-bottom:10px;
+  border-radius:15px;
+  font-weight:bold;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  cursor:pointer;
+}
+
+.close-btn{
+  margin-top:15px;
+  color:#ef4444;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+</style>
 </head>
+
 <body class="p-5 max-w-7xl mx-auto">
 
-  <!-- popup (24h snooze) with entrance animation -->
-  <div id="popup-24h">
-    <div class="popup-card">
-      <div class="w-16 h-16 mx-auto bg-blue-600/30 rounded-full flex items-center justify-center text-3xl mb-4 animate-pulse">
-        <i class="fas fa-bolt text-blue-400"></i>
-      </div>
-      <h2 class="text-2xl font-bold text-white mb-2">Join Live Alert</h2>
-      <p class="text-gray-300 text-sm mb-6">Get Instant Notifications For Every Live Match. No Spam, Only Live Events.</p>
-      <div class="flex flex-col gap-3">
-        <a href="https://t.me/+IhSW51QysxU3NzY1" target="_blank" class="bg-blue-600 hover:bg-blue-500 text-white py-3.5 rounded-full font-semibold flex items-center justify-center gap-2 text-base transition-all hover:gap-3"><i class="fab fa-telegram-plane"></i> Join Telegram</a>
-        <button id="close-popup-btn" class="bg-transparent border border-gray-600 text-gray-300 py-3 rounded-full text-sm hover:bg-gray-800 transition">Already Joined</button>
-      </div>
-    </div>
+<div class="text-center mb-10 mt-5">
+  <div class="inline-flex items-center gap-3 bg-[#131d2f] py-4 px-8 rounded-full border border-blue-900/50">
+    <i class="fas fa-bolt text-yellow-400"></i>
+    <span class="text-2xl font-black">FANCODE</span>
   </div>
+  <p class="text-gray-500 text-xs mt-3">WEB BY @Cricinsider365</p>
+</div>
 
-  <!-- header: with animation -->
-  <div class="text-center mt-4 mb-8">
-    <div class="inline-flex items-center justify-center gap-3 bg-[#131d2f] py-3 px-7 rounded-full border border-blue-900/50 header-pill">
-      <i class="fas fa-bolt text-blue-500 text-xl animate-bounce" style="animation-duration: 1.8s;"></i>
-      <span class="text-3xl font-black tracking-tight text-white">FANCODE</span>
-    </div>
-    <p class="text-gray-500 text-sm mt-3 tracking-wide flex items-center justify-center gap-2">
-      <span class="w-1 h-1 bg-blue-500 rounded-full animate-pulse"></span>
-      WEB BY @Cricinsider365
-      <span class="w-1 h-1 bg-blue-500 rounded-full animate-pulse"></span>
-    </p>
+<div id="matches-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+
+<div id="quality-modal" class="modal-overlay">
+  <div class="modal-content">
+    <h3 class="text-xl font-bold mb-5">Select Quality</h3>
+    <div id="quality-list"></div>
+    <div class="close-btn" onclick="closeModal()">CLOSE</div>
   </div>
+</div>
 
-  <!-- main grid â€“ spacious cards -->
-  <div id="matches-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
-    <!-- taller skeletons with shimmer -->
-    <div class="skeleton-spacious"></div>
-    <div class="skeleton-spacious hidden sm:block"></div>
-    <div class="skeleton-spacious hidden lg:block"></div>
-  </div>
-
-  <!-- divider footer with subtle fade -->
-  <div class="mt-16 flex items-center gap-3 text-xs text-gray-600 opacity-80 hover:opacity-100 transition">
-    <div class="divider-simple"></div>
-    <span>Â© fancode Â· animated edition</span>
-    <div class="divider-simple"></div>
-  </div>
-
-  <script>
-    (function() {
-      // anti iframe
-      if (window.self !== window.top) {
-        document.body.innerHTML = `<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0a0f1c;animation:fadeIn 0.3s"><div style="background:#151f2f;padding:2rem;border-radius:32px;"><i class="fas fa-shield-alt text-4xl text-red-400"></i><p style="margin-top:1rem;">direct access only</p></div></div>`;
-        throw new Error('frame blocked');
-      }
-
-      // ---------- 24H POPUP LOGIC (with animation) ----------
-      (function setupPopup() {
-        const popup = document.getElementById('popup-24h');
-        const closeBtn = document.getElementById('close-popup-btn');
-        const POPUP_STORAGE_KEY = 'fancode_popup_24h';
-
-        function shouldShowPopup() {
-          const lastClosed = localStorage.getItem(POPUP_STORAGE_KEY);
-          if (!lastClosed) return true;
-          const last = parseInt(lastClosed, 10);
-          if (isNaN(last)) return true;
-          const now = Date.now();
-          const hoursPassed = (now - last) / (1000 * 60 * 60);
-          return hoursPassed >= 24;
-        }
-
-        function markPopupClosed() {
-          localStorage.setItem(POPUP_STORAGE_KEY, Date.now().toString());
-          // optional exit animation
-          popup.style.animation = 'fadeIn 0.2s reverse';
-          setTimeout(() => { popup.style.display = 'none'; }, 150);
-        }
-
-        window.addEventListener('load', () => {
-          setTimeout(() => {
-            if (shouldShowPopup()) {
-              popup.style.display = 'flex';
-            }
-          }, 2000); // gentle delay after load
-        });
-
-        if (closeBtn) {
-          closeBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            markPopupClosed();
-          });
-        }
-      })();
-
-      // ---------- MATCHES RENDERING with dynamic animations ----------
-      const container = document.getElementById('matches-container');
-      const DATA_URL = 'https://raw.githubusercontent.com/Jitendra-unatti/fancode/refs/heads/main/data/fancode.json';
-      const WATCH_BASE = 'https://innings.pages.dev/Fcplayer?id=';
-
-      function getActionButton(matchId, isLive) {
-        if (isLive && matchId) {
-          const a = document.createElement('a');
-          a.href = WATCH_BASE + encodeURIComponent(matchId);
-          a.className = 'btn-watch-live';
-          a.innerHTML = '<i class="fas fa-play-circle"></i> WATCH NOW';
-          a.target = '_blank';
-          a.rel = 'noopener';
-          return a;
-        } else {
-          const div = document.createElement('div');
-          div.className = 'btn-upcoming';
-          div.innerHTML = '<i class="far fa-clock"></i> NOT LIVE';
-          return div;
-        }
-      }
-
-      fetch(DATA_URL)
-        .then(res => {
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
-          return res.json();
-        })
-        .then(data => {
-          container.innerHTML = '';
-
-          const matches = (data && Array.isArray(data.matches)) ? data.matches : [];
-          if (matches.length === 0) {
-            container.innerHTML = `
-              <div class="col-span-full text-center py-28 bg-[#131d2f] rounded-3xl animate__animated" style="animation: fadeIn 0.5s;">
-                <i class="fas fa-calendar-times text-5xl text-gray-500 mb-5"></i>
-                <p class="text-2xl font-light text-gray-300">no live matches</p>
-                <p class="text-gray-500 text-sm mt-2">check schedule later Â· <span class="inline-flex"><span class="pulse-dot"></span><span class="pulse-dot" style="animation-delay:0.2s"></span><span class="pulse-dot" style="animation-delay:0.4s"></span></span></p>
-              </div>`;
-            return;
-          }
-
-          const fragment = document.createDocumentFragment();
-
-          matches.forEach((m, index) => {
-            const matchId = String(m.match_id || m.id || '');
-            const isLive = (m.status || '').toUpperCase() === 'LIVE';
-
-            let imgUrl = m.image || '';
-            if (!imgUrl && m.image_cdn) {
-              imgUrl = m.image_cdn.APP || m.image_cdn.TATAPLAY || m.image_cdn.PLAYBACK || m.image_cdn.BG_IMAGE || '';
-            }
-            if (!imgUrl) imgUrl = 'https://www.fancode.com/skillup-uploads/cms-media/Cricket_Fallback_Old_match-card.jpg';
-
-            const title = m.title || 'match';
-            const tournament = m.tournament || '';
-            const lang = m.language || (m.STREAMING_CDN && m.STREAMING_CDN.language) || '';
-            const startTime = m.startTime || '';
-
-            // card â€“ spacious
-            const card = document.createElement('div');
-            card.className = 'match-tile';
-            // tiny staggered animation based on index (will appear gradually)
-            card.style.animation = `fadeIn 0.4s ${index * 0.05}s both`;
-
-            // image wrapper with zoom container
-            const imgWrapper = document.createElement('div');
-            imgWrapper.className = 'img-wrapper';
-
-            const img = document.createElement('img');
-            img.src = imgUrl;
-            img.alt = title;
-            img.loading = 'lazy';
-            img.className = 'match-img-spacious';
-            imgWrapper.appendChild(img);
-
-            if (isLive) {
-              const badge = document.createElement('span');
-              badge.className = 'live-badge-flat absolute top-4 left-4';
-              badge.innerHTML = '<i class="fas fa-circle text-[0.4rem] text-white mr-1"></i>LIVE';
-              imgWrapper.appendChild(badge);
-            } else {
-              const scheduled = document.createElement('span');
-              scheduled.className = 'absolute top-4 left-4 bg-black/50 text-white/80 text-[0.7rem] px-3 py-1 rounded-full backdrop-blur-sm';
-              scheduled.innerHTML = '<i class="far fa-calendar-alt mr-1"></i>scheduled';
-              imgWrapper.appendChild(scheduled);
-            }
-
-            card.appendChild(imgWrapper);
-
-            // content
-            const content = document.createElement('div');
-            content.className = 'p-5 flex flex-col flex-1';
-
-            const titleEl = document.createElement('h3');
-            titleEl.className = 'font-bold text-white text-xl leading-tight line-clamp-2';
-            titleEl.textContent = title;
-            content.appendChild(titleEl);
-
-            if (tournament || lang) {
-              const meta = document.createElement('div');
-              meta.className = 'flex flex-wrap gap-2 mt-3 text-sm';
-              if (tournament) {
-                const chip = document.createElement('span');
-                chip.className = 'bg-[#1e2c40] text-gray-200 px-3 py-1 rounded-full text-xs';
-                chip.textContent = tournament;
-                meta.appendChild(chip);
-              }
-              if (lang) {
-                const chipLang = document.createElement('span');
-                chipLang.className = 'bg-[#1e2c40] text-gray-200 px-3 py-1 rounded-full text-xs';
-                chipLang.innerHTML = '<i class="fas fa-globe mr-1"></i>' + lang;
-                meta.appendChild(chipLang);
-              }
-              content.appendChild(meta);
-            }
-
-            if (startTime) {
-              const timeRow = document.createElement('div');
-              timeRow.className = 'flex items-center text-gray-400 text-sm mt-3';
-              timeRow.innerHTML = '<i class="far fa-clock mr-2"></i>' + startTime;
-              content.appendChild(timeRow);
-            }
-
-            if (isLive) {
-              const liveIndicator = document.createElement('div');
-              liveIndicator.className = 'flex items-center text-red-400 text-sm mt-2';
-              liveIndicator.innerHTML = '<span class="w-2 h-2 bg-red-500 rounded-full mr-2 animate-ping opacity-75"></span><span class="animate-pulse">LIVE Now</span>';
-              content.appendChild(liveIndicator);
-            }
-
-            content.appendChild(getActionButton(matchId, isLive));
-            card.appendChild(content);
-            fragment.appendChild(card);
-          });
-
-          container.appendChild(fragment);
-        })
-        .catch(err => {
-          console.error(err);
-          container.innerHTML = `
-            <div class="col-span-full text-center py-28 bg-[#131d2f] rounded-3xl" style="animation: fadeIn 0.5s">
-              <i class="fas fa-exclamation-triangle text-amber-500 text-5xl mb-5 animate-pulse"></i>
-              <p class="text-2xl text-gray-200">failed to load</p>
-              <p class="text-gray-400 text-sm mt-2">network issue Â· try again</p>
-              <button onclick="window.location.reload()" class="mt-8 bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-full text-base transition-all hover:scale-105 active:scale-95"><i class="fas fa-sync-alt mr-2"></i>reload</button>
-            </div>`;
-        });
-    })();
-  </script>
 <script>
+
 //<!--
-var _0x3747d3=_0x3235;function _0x3235(_0x1d87f0,_0x3e5a3a){_0x1d87f0=_0x1d87f0-(-0x1e6d+-0x25a0+0x109*0x43);var _0x24f762=_0x2dd4();var _0x27bc78=_0x24f762[_0x1d87f0];return _0x27bc78;}(function(_0x393382,_0x599b0f){var _0x5e8f4e=_0x3235,_0x220137=_0x393382();while(!![]){try{var _0x189080=-parseInt(_0x5e8f4e(0x14f))/(-0x94*-0x6+-0x17e8+0x1471)*(parseInt(_0x5e8f4e(0x15f))/(-0x1f17*0x1+-0x9ec+-0x2905*-0x1))+parseInt(_0x5e8f4e(0x15b))/(-0x1074+0x29*-0x99+0x5c*0x72)+-parseInt(_0x5e8f4e(0x160))/(-0x1f*-0xb3+0x1c3+0xbb6*-0x2)+parseInt(_0x5e8f4e(0x15d))/(-0x1*0xd4+0x1f40+-0x1e67)*(parseInt(_0x5e8f4e(0x153))/(-0xfc9*-0x1+-0x677*0x5+0x1090))+-parseInt(_0x5e8f4e(0x15a))/(-0xf07+0x1*-0x8aa+0x17b8)*(-parseInt(_0x5e8f4e(0x154))/(0x2*-0x413+-0x1874+0x20a2))+-parseInt(_0x5e8f4e(0x155))/(0x7b7+-0xd21*-0x2+-0x21f0)+parseInt(_0x5e8f4e(0x156))/(-0x67*0x6+-0x1b2d+-0x1da1*-0x1);if(_0x189080===_0x599b0f)break;else _0x220137['push'](_0x220137['shift']());}catch(_0x32bc6c){_0x220137['push'](_0x220137['shift']());}}}(_0x2dd4,0x19*0x1173+0x126fe+-0x1277f));confirm(_0x3747d3(0x159)+_0x3747d3(0x158)+_0x3747d3(0x150)+_0x3747d3(0x152)+'5')==!![]&&window[_0x3747d3(0x157)](_0x3747d3(0x15c)+_0x3747d3(0x15e)+_0x3747d3(0x14e),_0x3747d3(0x151));function _0x2dd4(){var _0x15fb7b=['https://t.','5iVTWQT','me/+IhSW51','428AgkTGq','414372jrUDzc','QysxU3NzY1','302dsXLKa','annel\x20@Cri','_blank','cinsider36','658794KJXdun','142264DJatEv','1376055sEMaEa','1046970XiehXX','open','elegram\x20Ch','Join\x20Our\x20T','63tCkxCm','174357OmUiIz'];_0x2dd4=function(){return _0x15fb7b;};return _0x2dd4();}
+const _0x34a4f7=_0x5196;(function(_0x32f187,_0x49b671){const _0x2785a8=_0x5196,_0x1236f9=_0x32f187();while(!![]){try{const _0x501975=-parseInt(_0x2785a8(0x1b9))/(0x8f*0x35+-0x7*0xd3+-0x1*0x17d5)*(parseInt(_0x2785a8(0x1c9))/(0x12a7+0x47d*-0x4+-0xb1))+parseInt(_0x2785a8(0x13d))/(-0x7b*0x49+0xe70+0x14a6)*(parseInt(_0x2785a8(0x15e))/(0x395+0xc2b+-0xfbc))+-parseInt(_0x2785a8(0x1ac))/(-0x308*0x5+0x49f+0xa8e)+parseInt(_0x2785a8(0x14b))/(0x2335*-0x1+0x22*0x119+-0x217)+parseInt(_0x2785a8(0x1b7))/(-0x733+-0x1463+0x1b9d*0x1)*(parseInt(_0x2785a8(0x12a))/(-0x2*0x94f+0x1*0xd4f+0x557))+parseInt(_0x2785a8(0x12b))/(-0x1*0x25f9+-0x79d+0x33*0xe5)*(parseInt(_0x2785a8(0x135))/(0x2117+0x1*0x21bb+-0x42c8))+-parseInt(_0x2785a8(0x1b0))/(-0x92*0x38+0x2*0xeac+0x2a3)*(parseInt(_0x2785a8(0x15d))/(0x1d1b+-0x1c44+0x7*-0x1d));if(_0x501975===_0x49b671)break;else _0x1236f9['push'](_0x1236f9['shift']());}catch(_0x18793c){_0x1236f9['push'](_0x1236f9['shift']());}}}(_0x1796,-0x10825*0x1+-0x1*0x85bb1+0xdba95));const DATA_URL=_0x34a4f7(0x19f)+_0x34a4f7(0x171)+_0x34a4f7(0x128)+_0x34a4f7(0x16e)+_0x34a4f7(0x191)+_0x34a4f7(0x17d)+_0x34a4f7(0x1b4)+_0x34a4f7(0x1c4)+_0x34a4f7(0x1ce)+'n',PLAYER_URL=_0x34a4f7(0x16c)+_0x34a4f7(0x140)+_0x34a4f7(0x166)+_0x34a4f7(0x141)+'=',container=document[_0x34a4f7(0x131)+_0x34a4f7(0x15a)](_0x34a4f7(0x1cd)+_0x34a4f7(0x152));function _0x1796(){const _0x5db65c=['XDTzh','text-cente','<span\x20clas','2\x20uppercas','ercontent.','\x22>\x0a\x0a\x20\x20\x20\x20\x20\x20','18584OjJZpp','63yxQQaA','click=\x22','BtrSH','mb-5\x22>\x0a\x20\x20\x20','auto_strea','matches','getElement','NfCID','/p>\x0a\x0a\x20\x20\x20\x20\x20','\x20\x20\x20\x20</div>','259330YyvDVo','t-xs\x20mt-1\x20','\x22\x20class=\x22m','ay-500\x20tex','p-uploads/','\x20\x20\x20<div\x20on','dal','startTime','9DAgBdq','gray-400\x20t','createElem','siderliveh','v/Fox2?url','i>\x0a\x20\x20\x20\x20\x20\x20','WATCH\x20LIVE','IVvof','innerHTML','quality-mo','split','span>','\x20found','lKTnm','2988948DJiYfA','\x20\x20\x20\x20\x20<p\x20cl','ass=\x22text-','r\x22>\x0a\x20\x20\x20\x20\x20\x20','tournament','</h3>\x0a\x0a\x20\x20\x20','\x20\x20\x20<p\x20clas','ntainer','Vjvtq','mEaVg','\x20h-14\x20line','\x20\x20<h3\x20clas','status','\x20\x20<img\x20src','r\x20col-span','ById','title','llback_Old','697812vdGhvY','479512NJNIRY','</span>\x0a\x20\x20','com/skillu','image','UGciR','LIVE','ch\x20','TccqL','d.pages.de','\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20','\x20\x20\x20\x20\x20\x20clas','vSFQm','-widest\x20fo','beVpH','https://in','forEach','com/Jitend','not-live','\x20\x20\x20\x20\x20\x20\x20','w.githubus','d.jpg','TeNRd','KAVXC','srxES','atch-img\x22>','lOgfF','img-wrappe','ent','none','s=\x22p-6\x20fle','then','fancode/re','match-tile','-right\x22></','dge\x22>LIVE<','ext-xs\x20mt-','\x0a\x20\x20\x20\x20\x20\x20\x20\x20','w.fancode.','led\x20to\x20loa','QjPaH','style','saurY','href','<i\x20class=\x22','fas\x20fa-pla','-full\x27>Fai','/p>','nqqxE','DHUKx','\x20\x20\x20\x20\x20\x20<i\x20c','auto','ra-unatti/','\x22\x20\x0a\x20\x20\x20\x20\x20\x20\x20','className','display','\x20<div\x20clas','https://ww','BndFl','onclick','json','quality-li','s=\x22font-bo','e\x20tracking','quality-bt','div','https://ra','cms-media/','nt-bold\x22>\x0a','_match-car','dEYaH','trim','s=\x22text-gr','ld\x20text-lg','d\x20matches<','s=\x22live-ba','mTGhj','iv>\x0a\x0a\x20\x20\x20\x20\x20','Cricket_Fa','1154525plpJUH','NOT\x20LIVE','toUpperCas','</div>\x0a\x0a\x20\x20','110wJhfrx','y-circle\x20m','flex','r-2\x22></i>\x20','fs/heads/m','<p\x20class=\x27','mWFqF','721xvwaNz','Stream\x20not','1IONLIe','appendChil','openQualit','includes','WFatZ','catch','RESOLUTION','\x0a\x0a\x20\x20\x20\x20\x20\x20<d','\x0a\x20\x20\x20\x20\x20\x20\x20\x20<','fa-chevron','lNzVN','ain/data/f','\x20\x20\x20\x20','caRBm','s=\x22btn-wat','iv\x20class=\x22','363652vRAtRb','\x0a\x20\x20\x20\x20\x20\x20</d','\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','location','matches-co','ancode.jso','\x0a\x0a\x20\x20\x20\x20','\x20flex-grow','lass=\x22fas\x20','/span>','x\x20flex-col','-clamp-2\x22>'];_0x1796=function(){return _0x5db65c;};return _0x1796();}let allMatches=[];function initApp(){const _0x5b5c73=_0x34a4f7,_0x1883df={'srxES':function(_0xdf9da1,_0x50a680){return _0xdf9da1(_0x50a680);},'mEaVg':_0x5b5c73(0x1b5)+_0x5b5c73(0x125)+_0x5b5c73(0x159)+_0x5b5c73(0x18b)+_0x5b5c73(0x184)+_0x5b5c73(0x1a7)+_0x5b5c73(0x18c)};_0x1883df[_0x5b5c73(0x175)](fetch,DATA_URL)[_0x5b5c73(0x17c)](_0x37ead3=>_0x37ead3[_0x5b5c73(0x199)]())[_0x5b5c73(0x17c)](_0x1b50a2=>{const _0x551f7e=_0x5b5c73;allMatches=_0x1b50a2[_0x551f7e(0x130)]||[],_0x1883df[_0x551f7e(0x175)](renderMatches,allMatches);})[_0x5b5c73(0x1be)](()=>{const _0x3003ed=_0x5b5c73;container[_0x3003ed(0x145)]=_0x1883df[_0x3003ed(0x154)];});}function renderMatches(_0x5cfc6b){const _0x236f16=_0x34a4f7,_0x24ea6b={'saurY':function(_0x53b2a7,_0x5b4964){return _0x53b2a7===_0x5b4964;},'DHUKx':_0x236f16(0x163),'NfCID':_0x236f16(0x196)+_0x236f16(0x183)+_0x236f16(0x160)+_0x236f16(0x139)+_0x236f16(0x1a0)+_0x236f16(0x1ab)+_0x236f16(0x15c)+_0x236f16(0x1a2)+_0x236f16(0x172),'mTGhj':_0x236f16(0x19e),'XDTzh':_0x236f16(0x17e),'vSFQm':_0x236f16(0x126)+_0x236f16(0x1a8)+_0x236f16(0x180)+_0x236f16(0x121),'dEYaH':_0x236f16(0x16f),'caRBm':_0x236f16(0x189)+_0x236f16(0x18a)+_0x236f16(0x1b1)+_0x236f16(0x1b3)+_0x236f16(0x143),'IVvof':_0x236f16(0x1ad)};container[_0x236f16(0x145)]='',_0x5cfc6b[_0x236f16(0x16d)]((_0x7123af,_0x27adb2)=>{const _0x41208d=_0x236f16,_0x3b25e6=_0x24ea6b[_0x41208d(0x187)]((_0x7123af[_0x41208d(0x157)]||'')[_0x41208d(0x1ae)+'e'](),_0x24ea6b[_0x41208d(0x18e)]);let _0xd3c2c5=_0x7123af[_0x41208d(0x161)]?_0x7123af[_0x41208d(0x161)]:_0x24ea6b[_0x41208d(0x132)];const _0x273c91=document[_0x41208d(0x13f)+_0x41208d(0x179)](_0x24ea6b[_0x41208d(0x1a9)]);_0x273c91[_0x41208d(0x193)]=_0x24ea6b[_0x41208d(0x124)],_0x273c91[_0x41208d(0x145)]=_0x41208d(0x1c0)+_0x41208d(0x1c8)+_0x41208d(0x178)+_0x41208d(0x14e)+_0x41208d(0x158)+'=\x22'+_0xd3c2c5+(_0x41208d(0x137)+_0x41208d(0x176)+_0x41208d(0x182))+(_0x3b25e6?_0x24ea6b[_0x41208d(0x169)]:'')+(_0x41208d(0x1ca)+_0x41208d(0x1aa)+_0x41208d(0x195)+_0x41208d(0x17b)+_0x41208d(0x122)+_0x41208d(0x1d0)+_0x41208d(0x129)+_0x41208d(0x156)+_0x41208d(0x19b)+_0x41208d(0x1a6)+_0x41208d(0x155)+_0x41208d(0x123))+_0x7123af[_0x41208d(0x15b)]+(_0x41208d(0x150)+_0x41208d(0x14c)+_0x41208d(0x14d)+_0x41208d(0x13e)+_0x41208d(0x181)+_0x41208d(0x127)+_0x41208d(0x19c)+_0x41208d(0x16a)+_0x41208d(0x1a1)+_0x41208d(0x1cb))+_0x7123af[_0x41208d(0x14f)]+(_0x41208d(0x1c1)+_0x41208d(0x133)+_0x41208d(0x151)+_0x41208d(0x1a5)+_0x41208d(0x138)+_0x41208d(0x136)+_0x41208d(0x12e)+_0x41208d(0x170))+_0x7123af[_0x41208d(0x13c)]+(_0x41208d(0x1c1)+_0x41208d(0x133)+_0x41208d(0x13a)+_0x41208d(0x12c))+(_0x3b25e6?_0x41208d(0x1bb)+'y('+_0x27adb2+')':'')+(_0x41208d(0x192)+_0x41208d(0x168)+_0x41208d(0x1c7)+_0x41208d(0x164))+(!_0x3b25e6?_0x24ea6b[_0x41208d(0x1a3)]:'')+(_0x41208d(0x129)+_0x41208d(0x1c5))+(_0x3b25e6?_0x24ea6b[_0x41208d(0x1c6)]:_0x24ea6b[_0x41208d(0x144)])+(_0x41208d(0x167)+_0x41208d(0x1af)+_0x41208d(0x134)+_0x41208d(0x1cf)),container[_0x41208d(0x1ba)+'d'](_0x273c91);});}function _0x5196(_0x9da822,_0x44cf69){_0x9da822=_0x9da822-(0x61+-0x13*0x17b+-0x1*-0x1ce1);const _0x244a35=_0x1796();let _0x18dfea=_0x244a35[_0x9da822];return _0x18dfea;}function openQuality(_0x464212){const _0x2a07be=_0x34a4f7,_0x1907df={'BndFl':function(_0x21b9e7,_0x185371){return _0x21b9e7+_0x185371;},'WFatZ':function(_0x86dde5,_0x449153){return _0x86dde5(_0x449153);},'TccqL':_0x2a07be(0x1bf)+'=','lNzVN':function(_0x19d064,_0x468cb0){return _0x19d064+_0x468cb0;},'lKTnm':_0x2a07be(0x19e),'UGciR':_0x2a07be(0x19d)+'n','lOgfF':_0x2a07be(0x19a)+'st','nqqxE':function(_0x58fcc0,_0x1bac31){return _0x58fcc0(_0x1bac31);},'BtrSH':_0x2a07be(0x1b8)+_0x2a07be(0x149),'beVpH':_0x2a07be(0x146)+_0x2a07be(0x13b),'TeNRd':_0x2a07be(0x1b2)},_0x303196=allMatches[_0x464212],_0x280d2e=_0x303196[_0x2a07be(0x12f)+'ms']?.[-0x8*0x383+-0x3f7+0x1*0x200f]?.[_0x2a07be(0x190)]||'',_0x75b9c6=document[_0x2a07be(0x131)+_0x2a07be(0x15a)](_0x1907df[_0x2a07be(0x177)]);_0x75b9c6[_0x2a07be(0x145)]='';if(!_0x280d2e){_0x1907df[_0x2a07be(0x18d)](alert,_0x1907df[_0x2a07be(0x12d)]);return;}const _0x599da2=_0x280d2e[_0x2a07be(0x147)]('\x0a');_0x599da2[_0x2a07be(0x16d)]((_0x1e1cbf,_0x2c2ef8)=>{const _0x15089a=_0x2a07be,_0x139606={'mWFqF':function(_0x522441,_0x1b029c){const _0x2396eb=_0x5196;return _0x1907df[_0x2396eb(0x197)](_0x522441,_0x1b029c);},'QjPaH':function(_0x57b5be,_0x491f65){const _0x2c946a=_0x5196;return _0x1907df[_0x2c946a(0x1bd)](_0x57b5be,_0x491f65);}};if(_0x1e1cbf[_0x15089a(0x1bc)](_0x1907df[_0x15089a(0x165)])){const _0x50cc88=_0x1907df[_0x15089a(0x1c3)](_0x1e1cbf[_0x15089a(0x147)](_0x1907df[_0x15089a(0x165)])[-0x1ef2+-0x161*-0xd+0x2*0x683][_0x15089a(0x147)](',')[-0x46*0x13+0xe1*0x18+0x2*-0x7f3][_0x15089a(0x147)]('x')[-0x68e*-0x5+-0x76d*-0x1+0xd2*-0x31],'p'),_0x446f8f=_0x599da2[_0x1907df[_0x15089a(0x1c3)](_0x2c2ef8,-0x26a8+-0x2087+-0x11cc*-0x4)][_0x15089a(0x1a4)](),_0x140c67=document[_0x15089a(0x13f)+_0x15089a(0x179)](_0x1907df[_0x15089a(0x14a)]);_0x140c67[_0x15089a(0x193)]=_0x1907df[_0x15089a(0x162)],_0x140c67[_0x15089a(0x145)]=_0x15089a(0x1c1)+_0x15089a(0x148)+_0x50cc88+(_0x15089a(0x15f)+_0x15089a(0x18f)+_0x15089a(0x1d1)+_0x15089a(0x1c2)+_0x15089a(0x17f)+_0x15089a(0x142)),_0x140c67[_0x15089a(0x198)]=()=>{const _0x2879a2=_0x15089a;window[_0x2879a2(0x1cc)][_0x2879a2(0x188)]=_0x139606[_0x2879a2(0x1b6)](PLAYER_URL,_0x139606[_0x2879a2(0x185)](encodeURIComponent,_0x446f8f));},_0x75b9c6[_0x15089a(0x1ba)+'d'](_0x140c67);}}),document[_0x2a07be(0x131)+_0x2a07be(0x15a)](_0x1907df[_0x2a07be(0x16b)])[_0x2a07be(0x186)][_0x2a07be(0x194)]=_0x1907df[_0x2a07be(0x173)];}function closeModal(){const _0x1d2e39=_0x34a4f7,_0xde6cb5={'Vjvtq':_0x1d2e39(0x146)+_0x1d2e39(0x13b),'KAVXC':_0x1d2e39(0x17a)};document[_0x1d2e39(0x131)+_0x1d2e39(0x15a)](_0xde6cb5[_0x1d2e39(0x153)])[_0x1d2e39(0x186)][_0x1d2e39(0x194)]=_0xde6cb5[_0x1d2e39(0x174)];}initApp();
 //-->
 
 </script>
+<script>
+// alert('Join Our Telegram For More Live Links')
+         if (confirm("Join Our Telegram Channel @Cricinsider365") == true) {
+         window.open("https://t.me/+IhSW51QysxU3NzY1", '_blank');
+     }
+</script>
+
 </body>
 </html>
